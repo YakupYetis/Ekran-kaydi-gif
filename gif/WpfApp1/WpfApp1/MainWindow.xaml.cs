@@ -10,16 +10,16 @@ namespace MyCustomApp
 {
     public partial class MainWindow : Window
     {
-        private DispatcherTimer timer; // Zamanlayıcı değişkeni, belirli aralıklarla ekran görüntüsü almak için kullanılır
-        private MemoryStream memoryStream; // Ekran görüntülerini geçici olarak hafızada tutmak için kullanılır
-        private GifBitmapEncoder gifEncoder; // Ekran görüntülerini GIF formatına dönüştürmek için kullanılır
+        private DispatcherTimer timer; 
+        private MemoryStream memoryStream; 
+        private GifBitmapEncoder gifEncoder; 
 
         public MainWindow()
         {
             InitializeComponent();
 
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(100); // 100ms'lik aralıklarla ekran görüntüsü alınacak
+            timer.Interval = TimeSpan.FromMilliseconds(100); 
             timer.Tick += Timer_Tick;
             timer.Start();
 
@@ -28,30 +28,26 @@ namespace MyCustomApp
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            // Ekranın anlık görüntüsünü alır
             var screenshot = new RenderTargetBitmap(
                 (int)SystemParameters.PrimaryScreenWidth,
                 (int)SystemParameters.PrimaryScreenHeight,
                 96, 96, PixelFormats.Pbgra32);
             screenshot.Render(Application.Current.MainWindow);
 
-            // Ekran görüntüsünü Image kontrolüne atar
             screenshotImage.Source = screenshot;
 
-            // Ekran görüntüsünü GIF'e ekler
             var frame = BitmapFrame.Create(screenshot);
             gifEncoder.Frames.Add(frame);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Kaydet düğmesine tıklandığında GIF'i kaydeder
             memoryStream = new MemoryStream();
             gifEncoder.Save(memoryStream);
             memoryStream.Position = 0;
 
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog();
-            saveFileDialog.Filter = "GIF files (*.gif)|*.gif"; // Sadece GIF formatında kaydetme seçeneği sunar
+            saveFileDialog.Filter = "GIF files (*.gif)|*.gif"; 
 
             if (saveFileDialog.ShowDialog() == true)
             {
